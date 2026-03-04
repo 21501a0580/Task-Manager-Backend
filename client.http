@@ -1,0 +1,141 @@
+### =========================================
+### BASE URL
+### =========================================
+
+@baseUrl = http://localhost:5000
+
+### =========================================
+### 1️⃣ REGISTER USER
+### =========================================
+
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Bharath",
+  "email": "bharath@gmail.com",
+  "password": "123456",
+  "role": "user"
+}
+
+### =========================================
+### 2️⃣ LOGIN USER
+### =========================================
+
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "bharath@gmail.com",
+  "password": "123456"
+}
+
+### =========================================
+### AFTER LOGIN: PASTE TOKEN HERE
+### =========================================
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YTg2NjYwZDhmNDM1OTFiNjMxZWJjMSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzcyNjQzOTU1LCJleHAiOjE3NzI3MzAzNTV9.1NXRqWi6K_qsxVfquwMuvqIfBKKQbEGv8T3jTKjuYp0
+
+### =========================================
+### 3️⃣ CREATE TASK WITH FILE
+### =========================================
+
+POST {{baseUrl}}/api/task
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="name"
+
+Bharath
+------WebKitFormBoundary
+Content-Disposition: form-data; name="title"
+
+Sample Task
+------WebKitFormBoundary
+Content-Disposition: form-data; name="description"
+
+Task with file upload
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename=""
+Type: application/pdf
+
+< ./terms-and-conditions-for-axis-bank-supermoney-rupay-credit-card.pdf
+------WebKitFormBoundary-->
+
+### =========================================
+### 4️⃣ GET ALL TASKS
+### =========================================
+
+GET {{baseUrl}}/api/task
+Authorization: Bearer {{token}}
+
+### =========================================
+### 5️⃣ UPDATE TASK WITH NEW FILE
+### =========================================
+
+@taskId = 69a866aad8f43591b631ebca
+
+PUT {{baseUrl}}/api/task/{{taskId}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="name"
+
+Bharath
+------WebKitFormBoundary
+Content-Disposition: form-data; name="taskTitle"
+
+Updated Task Title
+------WebKitFormBoundary
+Content-Disposition: form-data; name="description"
+
+Updated description with new file
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="updated.pdf"
+Content-Type: application/pdf
+
+< ./updated.pdf
+------WebKitFormBoundary--
+
+### =========================================
+### 6️⃣ UPDATE TASK WITHOUT FILE
+### =========================================
+
+PUT {{baseUrl}}/api/task/{{taskId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "taskTitle": "Only Text Update",
+  "description": "Updated with out file",
+  "status": "Completed"
+}
+
+### =========================================
+### 7️⃣ DELETE TASK
+### =========================================
+
+DELETE {{baseUrl}}/api/task/{{taskId}}
+Authorization: Bearer {{token}}
+
+### =========================================
+### 8️⃣ GET STATS
+### =========================================
+
+GET {{baseUrl}}/api/task/stats
+Authorization: Bearer {{token}}
+
+### =========================================
+### ❌ NEGATIVE TEST: NO TOKEN
+### =========================================
+
+GET {{baseUrl}}/api/task
+
+### =========================================
+### ❌ NEGATIVE TEST: WRONG TOKEN
+### =========================================
+
+GET {{baseUrl}}/api/task
+Authorization: Bearer invalidtoken123
